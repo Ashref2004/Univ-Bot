@@ -324,7 +324,7 @@ def error_handler(update: Update, context: CallbackContext) -> None:
 def main() -> None:
     """Start the bot."""
     # Token
-    updater = Updater("7319696952:AAHi4oOfQ-GW2Swg-iTQCei3g1MJBW5uXtU", use_context=True)
+    updater = Updater("7194132273:AAFFf4Q9J4YJFKPm0poQ1DEjKn4WJYSNgec", use_context=True)
     dp = updater.dispatcher
 
     # Conversation handler
