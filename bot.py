@@ -11,7 +11,6 @@ from typing import Dict, List
 from enum import Enum, auto
 from subjects_data import subjects_data  
 
-# Configure logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO,
@@ -22,7 +21,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Conversatation stat
 class State(Enum):
     LANGUAGE = auto()
     YEAR = auto()
@@ -30,7 +28,6 @@ class State(Enum):
     SUBJECT = auto()
     RESOURCE = auto()
 
-#  messages
 messages = {
     "en": {
         "welcome": "🏫 Welcome to the University of Science and Technology, Tissemsilt (CMT Branch) \n\nChoose your language:",
@@ -66,7 +63,6 @@ messages = {
     }
 }
 
-# User data storage
 user_data = {}
 
 def create_keyboard(buttons: List[List[Dict]], lang: str = "en", back_state: str = None) -> InlineKeyboardMarkup:
@@ -187,7 +183,6 @@ def handle_language(query, callback_data) -> int:
     user_id = query.from_user.id
     lang = callback_data.replace("lang_", "")
     
-    # Save user lang
     if user_id not in user_data:
         user_data[user_id] = {}
     user_data[user_id]["lang"] = lang
@@ -204,7 +199,6 @@ def handle_year(query, callback_data) -> int:
     user_id = query.from_user.id
     lang = user_data[user_id]["lang"]
     
-    # Save selected year
     user_data[user_id]["year"] = year
     
     query.edit_message_text(
@@ -220,10 +214,8 @@ def handle_semester(query, callback_data) -> int:
     lang = user_data[user_id]["lang"]
     year = user_data[user_id]["year"]
     
-    # Save selected smtr
     user_data[user_id]["sem"] = sem
     
-    # Get subjects keyboard
     keyboard = subjects_keyboard(year, sem, lang)
     if not keyboard:
         query.edit_message_text(messages[lang]["no_content"])
@@ -243,15 +235,12 @@ def handle_subject(query, callback_data) -> int:
     year = user_data[user_id]["year"]
     sem = user_data[user_id]["sem"]
     
-    # Save selected sbjt
     user_data[user_id]["subject"] = subject
     
-    # Get subject resources
     semester_key = f"semester{sem}"
     subject_data = subjects_data[year][semester_key].get(subject, {})
     back_data = f"SUB_{year}_{sem}"
     
-    # Get resources keyboard
     keyboard = resources_keyboard(subject_data, lang, back_data)
     if not keyboard:
         query.edit_message_text(messages[lang]["no_content"])
@@ -327,7 +316,6 @@ def main() -> None:
     updater = Updater("7194132273:AAFFf4Q9J4YJFKPm0poQ1DEjKn4WJYSNgec", use_context=True)
     dp = updater.dispatcher
 
-    # Conversation handler
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
         states={
